@@ -1,0 +1,33 @@
+import requests
+import json
+
+def listafilmes(titulo):
+    lista = []
+    for i in range(1, 101):
+        try:
+            req = requests.get('https://www.omdbapi.com/?apikey=20da9bfb&s=' + titulo + '&type=movie&page=' + str(i))
+            resposta = json.loads(req.text)
+            if resposta['Response'] == 'False':
+                break
+            else:
+                for filme in resposta['Search']:
+                    tit = filme['Title']
+                    ano = filme['Year']
+                    string = tit + ' (' + ano + ') '
+                    lista.append(string)
+        except:
+            print('Erro na conexão')
+        return lista
+
+sair = False
+while not sair:
+    op = input('Escreva um nome de um filme ou SAIR para fechar o programa: ')
+
+    if op == 'SAIR':
+        sair = True
+        print('Saindo do programa...')
+    else:
+        lista_de_filmes = listafilmes(op)
+        print('Filmes encontrados: ', len(lista_de_filmes))
+        for filme in lista_de_filmes:
+            print(filme)
